@@ -2,34 +2,6 @@
     // Evita injetar mais de uma vez
     if (document.getElementById("tw-pt-container")) return;
 
-    var PRELOADED_FRIENDS = [
-        "silverfox007", "jonathanhlogan", "GAZBAN2001", "stevenpalmquist",
-        "senrybyendor", "allaxou", "crysis1", "Crystal Blue Phoenix",
-        "king cook", "IfbbH2O", "diablo1985", "Asterope",
-        "Dr Galen Adams", "Vanoppen", "cabbagetree", "tiguan",
-        "funky89", "HairyPotter", "almostnoob", "CatBallou",
-        "harryh", "cove", "Aivos", "Neiman58",
-        "*NightHunter*", "Kurifuton Yui", "Malyaffka", "Aldzeris",
-        "Normann", "BigNoob", "mackan94", "Migelius",
-        "Ilenna", "maarten909", "Dorian", "tyrebyter",
-        "Yasuo", "andreisefu", "Saltgodis", "Hawk Youngblood",
-        "Windwalker", "Luz Polar", "guidehomard21", "teha-nelli",
-        "44-40 Winchester", "whitebeard", "Levi Ironwood", "Sadia",
-        "Samuel Clemens", "Hedgepeth", "C. Marston", "rod38",
-        "laddertrapje", "Subbotin", "Godess", "Mrs. Cucumber",
-        "Critical Mass", "JennyNet", "Jake Slade", "Lemon Haze",
-        "Kimchilove", "Rastone7", "pypsik", "Machenta",
-        "Winter Soldier", "iSaging", "BlackWidow0216", "bonnieclydeparker",
-        "Bowiekf", "Louise Archer", "VAVEYLA1881", "cotao",
-        "KAKOS", "Wotur", "Gabimaru", "Guest",
-        "Unkn0wn", "bastird", "HuesoKing", "Pastor",
-        "Waterain", "Panatron", "Strider Gray", "Manquandre",
-        "Cj123321", "sinner42", "bieniu4", "FastHands",
-        "Muetnil", "ByRchard", "Terence Hill", "Juan Domingo Peron",
-        "henridev", "Laas Hasd", "Ordinary Cowboy", "IroNx",
-        "Broly", "Cattle Anie", "pkmobby", "szankeriniooo"
-    ];
-
     // Persistencia Local
     function loadSet(key) {
         var raw = localStorage.getItem(key);
@@ -49,12 +21,12 @@
 
     function getManualFriends() {
         var raw = localStorage.getItem("tw_ft_manual_friends");
-        if (!raw) return PRELOADED_FRIENDS;
+        if (!raw) return [];
         try {
             var arr = JSON.parse(raw);
-            if (Array.isArray(arr) && arr.length > 0) return arr;
+            if (Array.isArray(arr)) return arr;
         } catch (e) {}
-        return PRELOADED_FRIENDS;
+        return [];
     }
 
     function saveManualFriends(arr) {
@@ -215,10 +187,17 @@
         listContainer.innerHTML = "";
 
         if (totalCount === 0) {
-            listContainer.innerHTML = 
-                '<div style="padding:15px 10px; text-align:center; color:#a49175; font-size:11px;">' +
-                    'Abra a janela de logs no jogo e clique em <b>Escanear Logs</b> para capturar quem você enviou e quem te enviou!' +
-                '</div>';
+            if (mode === "auto") {
+                listContainer.innerHTML = 
+                    '<div style="padding:15px 10px; text-align:center; color:#a49175; font-size:11px;">' +
+                        'Abra a janela de logs no jogo e clique em <b>Escanear Logs</b> para capturar quem você enviou e quem te enviou!' +
+                    '</div>';
+            } else {
+                listContainer.innerHTML = 
+                    '<div style="padding:15px 10px; text-align:center; color:#a49175; font-size:11px;">' +
+                        'Sua lista manual está vazia.<br>Cole seus amigos na aba <b>Lista Manual</b> ou use a aba <b>Auto (Pelos Logs)</b>!' +
+                    '</div>';
+            }
         } else if (inactives.length === 0) {
             listContainer.innerHTML = 
                 '<div style="padding:15px; text-align:center; color:#55d66e; font-weight:bold;">' +
