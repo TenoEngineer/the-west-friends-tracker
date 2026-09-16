@@ -41,6 +41,14 @@
         localStorage.setItem("tw_ft_mode", m);
     }
 
+    function isClosedState() {
+        return localStorage.getItem("tw_ft_closed") === "true";
+    }
+
+    function setClosedState(closed) {
+        localStorage.setItem("tw_ft_closed", closed ? "true" : "false");
+    }
+
     // Cria a interface HTML
     var container = document.createElement("div");
     container.id = "tw-pt-container";
@@ -49,7 +57,7 @@
             '<div class="tw-pt-title">🤠 Friends Tracker</div>' +
             '<div id="tw-pt-header-buttons">' +
                 '<button class="tw-pt-icon-btn" id="tw-pt-btn-minimize" title="Minimizar">_</button>' +
-                '<button class="tw-pt-icon-btn close" id="tw-pt-btn-close" title="Fechar Janela">✕</button>' +
+                '<button class="tw-pt-icon-btn close" id="tw-pt-btn-close" title="Fechar de verdade (Reabra pelo ícone da extensão)">✕</button>' +
             '</div>' +
         '</div>' +
 
@@ -108,17 +116,16 @@
     // Pílula minimizada
     var pill = document.createElement("div");
     pill.id = "tw-pt-pill";
-    pill.innerText = "🤠 Friends Tracker";
+    pill.innerHTML = '<span id="tw-pt-pill-text">🤠 Friends Tracker</span><span id="tw-pt-pill-close" class="tw-pt-pill-close" title="Fechar">✕</span>';
 
-    // Ícone disparador para reabrir quando fechado
-    var launcher = document.createElement("div");
-    launcher.id = "tw-pt-launcher";
-    launcher.innerHTML = "🤠";
-    launcher.title = "Reabrir Friends Tracker";
+    // Se estiver no estado fechado, inicia oculto
+    if (isClosedState()) {
+        container.style.display = "none";
+        pill.style.display = "none";
+    }
 
     document.body.appendChild(container);
     document.body.appendChild(pill);
-    document.body.appendChild(launcher);
 
     function showToast(msg) {
         var el = document.getElementById("tw-pt-toast");
@@ -127,6 +134,41 @@
         setTimeout(function() {
             if (el.innerText === msg) el.innerText = "";
         }, 3500);
+    }
+
+    // Fecha a janela de verdade (sumindo tudo e lembrando a escolha)
+    function closeTracker() {
+        setClosedState(true);
+        container.style.display = "none";
+        pill.style.display = "none";
+    }
+
+    // Abre a janela
+    function openTracker() {
+        setClosedState(false);
+        pill.style.display = "none";
+        container.style.display = "block";
+        render();
+    }
+
+    // Alterna abrir/fechar (acionado ao clicar no ícone da extensão no Chrome)
+    function toggleTracker() {
+        var isHidden = container.style.display === "none" && pill.style.display === "none";
+        if (isHidden) {
+            openTracker();
+        } else {
+            closeTracker();
+        }
+    }
+
+    // Ouve mensagens da extensão (clique no ícone da barra de ferramentas do Chrome)
+    if (typeof chrome !== "undefined" && chrome.runtime && chrome.runtime.onMessage) {
+        chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
+            if (request && request.action === "toggle_tracker") {
+                toggleTracker();
+                if (sendResponse) sendResponse({ success: true });
+            }
+        });
     }
 
     // Renderiza a interface baseado no modo atual
@@ -188,7 +230,10 @@
         document.getElementById("tw-pt-stat-inactive").innerText = inactives.length;
 
         // Atualiza pílula minimizada
-        pill.innerText = "🤠 Inativos: " + inactives.length + " | Ativos: " + activeCount;
+        var pillText = document.getElementById("tw-pt-pill-text");
+        if (pillText) {
+            pillText.innerText = "🤠 Inativos: " + inactives.length + " | Ativos: " + activeCount;
+        }
 
         // Atualiza lista
         var listContainer = document.getElementById("tw-pt-list-container");
@@ -368,26 +413,17 @@
     // Minimizar painel
     document.getElementById("tw-pt-btn-minimize").addEventListener("click", function() {
         container.style.display = "none";
-        launcher.style.display = "none";
-        pill.style.display = "block";
+        pill.style.display = "flex";
     });
 
-    // Fechar painel completamente
-    document.getElementById("tw-pt-btn-close").addEventListener("click", function() {
-        container.style.display = "none";
-        pill.style.display = "none";
-        launcher.style.display = "flex";
+    // Fechar painel de verdade (some tudo e lembra a escolha)
+    document.getElementById("tw-pt-btn-close").addEventListener("click", closeTracker);
+    document.getElementById("tw-pt-pill-close").addEventListener("click", function(e) {
+        e.stopPropagation();
+        closeTracker();
     });
 
-    // Reabrir a partir do ícone disparador
-    launcher.addEventListener("click", function() {
-        if (!launcherMoved) {
-            launcher.style.display = "none";
-            container.style.display = "block";
-        }
-    });
-
-    // Variáveis de arraste para Pílula, Janela e Ícone Launcher
+    // Variáveis de arraste para Pílula e Janela
     var isPillDragging = false;
     var pillStartX = 0, pillStartY = 0;
     var pillOffsetX = 0, pillOffsetY = 0;
@@ -396,13 +432,9 @@
     var isMainDragging = false;
     var mainOffsetX = 0, mainOffsetY = 0;
 
-    var isLauncherDragging = false;
-    var launcherStartX = 0, launcherStartY = 0;
-    var launcherOffsetX = 0, launcherOffsetY = 0;
-    var launcherMoved = false;
-
     // Arrastar Pílula Minimizada
     pill.addEventListener("mousedown", function(e) {
+        if (e.target.id === "tw-pt-pill-close") return;
         isPillDragging = true;
         pillMoved = false;
         pillStartX = e.clientX;
@@ -410,18 +442,6 @@
         var rect = pill.getBoundingClientRect();
         pillOffsetX = e.clientX - rect.left;
         pillOffsetY = e.clientY - rect.top;
-        e.preventDefault();
-    });
-
-    // Arrastar Ícone Disparador (Launcher)
-    launcher.addEventListener("mousedown", function(e) {
-        isLauncherDragging = true;
-        launcherMoved = false;
-        launcherStartX = e.clientX;
-        launcherStartY = e.clientY;
-        var rect = launcher.getBoundingClientRect();
-        launcherOffsetX = e.clientX - rect.left;
-        launcherOffsetY = e.clientY - rect.top;
         e.preventDefault();
     });
 
@@ -449,19 +469,6 @@
             }
         }
 
-        // Arrastando o launcher
-        if (isLauncherDragging) {
-            var ldx = Math.abs(e.clientX - launcherStartX);
-            var ldy = Math.abs(e.clientY - launcherStartY);
-            if (ldx > 4 || ldy > 4) {
-                launcherMoved = true;
-                launcher.style.right = "auto";
-                launcher.style.bottom = "auto";
-                launcher.style.left = (e.clientX - launcherOffsetX) + "px";
-                launcher.style.top = (e.clientY - launcherOffsetY) + "px";
-            }
-        }
-
         // Arrastando o container principal
         if (isMainDragging) {
             container.style.right = "auto";
@@ -474,13 +481,11 @@
     window.addEventListener("mouseup", function() {
         if (isPillDragging) {
             isPillDragging = false;
+            // Se apenas clicou na pílula sem arrastar, restaura a janela principal
             if (!pillMoved) {
                 pill.style.display = "none";
                 container.style.display = "block";
             }
-        }
-        if (isLauncherDragging) {
-            isLauncherDragging = false;
         }
         if (isMainDragging) {
             isMainDragging = false;
@@ -498,5 +503,7 @@
         }
     });
 
-    render();
+    if (!isClosedState()) {
+        render();
+    }
 })();

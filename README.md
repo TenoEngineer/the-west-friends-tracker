@@ -20,6 +20,10 @@
   * Position the widget anywhere on your screen.
   * Minimize to a compact status badge (`🤠 Inactive: 24 | Active: 76`).
   * The minimized badge is also **draggable** across your screen.
+* **❌ Complete Close & Toolbar Toggle (Zero Screen Clutter):**
+  * Clicking the close button (`✕`) hides the widget completely without leaving any floating buttons on your screen.
+  * It **remembers your closed state**: reloading the game (`F5`) will **never** annoy you with unwanted popups.
+  * To open or toggle the tracker at any time, simply **click the extension icon in your Chrome toolbar**!
 * **🔄 Auto-Scan on Pagination:**
   * When browsing log pages in the game, the tracker automatically detects page changes and scans new entries.
 * **🌐 Multilingual Support:**
@@ -57,14 +61,14 @@ It takes **less than 1 minute** to install:
 2. Select the `the-west-friends-tracker` folder.
 3. Done! The extension is now installed.
 
-> **Tip for Edge, Brave, or Opera users:** This extension is compatible with all Chromium-based browsers! Go to `edge://extensions/` or `brave://extensions/`, enable Developer Mode, and click "Load unpacked".
+> **Tip:** Pin the extension to your Chrome toolbar (click the puzzle piece icon at top right > click the pin next to **The West - Friends Tracker**). That way you can click it anytime to show or hide the in-game tracker with 1 click!
 
 ---
 
 ## 🎮 How to Use in The-West
 
 1. **Open The-West:** Go to your game world (e.g. `https://en31.the-west.net/game.php`).
-2. **Locate the Widget:** Look at the bottom-right corner of your screen for the **🤠 Friends Tracker** panel.
+2. **Open / Close anytime:** Click the extension icon in your browser toolbar to toggle the tracker on or off.
 3. **Open the Event Window:** Click on the current event icon (e.g., Oktoberfest).
 4. **Go to the Event Log:** Open the tab with your pretzel/gift transactions.
 5. **Scan Your Pages:**
