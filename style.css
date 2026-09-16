@@ -50,9 +50,15 @@
     cursor: pointer;
     padding: 2px 7px;
     font-size: 11px;
+    transition: background 0.15s, border-color 0.15s;
 }
 .tw-pt-icon-btn:hover {
     background: #6a492f;
+}
+.tw-pt-icon-btn.close:hover {
+    background: #7a1c1c;
+    border-color: #ff5555;
+    color: #fff;
 }
 
 /* Tabs */
@@ -248,4 +254,31 @@
 }
 #tw-pt-pill:active {
     cursor: grabbing;
+}
+
+/* Floating Launcher Icon (when closed) */
+#tw-pt-launcher {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    background: linear-gradient(180deg, #4d3622 0%, #2b1f13 100%);
+    border: 2px solid #a67c52;
+    color: #ffd685;
+    width: 38px;
+    height: 38px;
+    border-radius: 50%;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+    cursor: pointer;
+    z-index: 999999;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.75);
+    user-select: none;
+    transition: transform 0.15s, background 0.15s;
+}
+#tw-pt-launcher:hover {
+    transform: scale(1.12);
+    background: linear-gradient(180deg, #64492e 0%, #3a2a19 100%);
+    box-shadow: 0 6px 20px rgba(0,0,0,0.9);
 }
