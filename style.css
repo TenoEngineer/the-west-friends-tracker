@@ -1,0 +1,251 @@
+/* The West Friends Tracker - Styling */
+#tw-pt-container {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    width: 340px;
+    background: #261e16;
+    border: 2px solid #8d673f;
+    border-radius: 8px;
+    box-shadow: 0 6px 25px rgba(0, 0, 0, 0.75);
+    color: #eeddbb;
+    font-family: Arial, sans-serif;
+    font-size: 12px;
+    z-index: 999999;
+    user-select: none;
+}
+
+#tw-pt-header {
+    background: linear-gradient(180deg, #4d3622 0%, #312114 100%);
+    border-bottom: 1px solid #8d673f;
+    padding: 8px 10px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    cursor: move;
+    border-top-left-radius: 6px;
+    border-top-right-radius: 6px;
+    font-weight: bold;
+    color: #ffd685;
+}
+
+#tw-pt-header .tw-pt-title {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 13px;
+    letter-spacing: 0.5px;
+}
+
+#tw-pt-header-buttons {
+    display: flex;
+    gap: 6px;
+}
+
+.tw-pt-icon-btn {
+    background: #503723;
+    border: 1px solid #8d673f;
+    color: #eeddbb;
+    border-radius: 3px;
+    cursor: pointer;
+    padding: 2px 7px;
+    font-size: 11px;
+}
+.tw-pt-icon-btn:hover {
+    background: #6a492f;
+}
+
+/* Tabs */
+.tw-pt-tabs {
+    display: flex;
+    background: #1b140e;
+    border-bottom: 1px solid #4a3622;
+}
+
+.tw-pt-tab {
+    flex: 1;
+    padding: 7px 4px;
+    text-align: center;
+    font-size: 11px;
+    font-weight: bold;
+    color: #a49175;
+    cursor: pointer;
+    background: transparent;
+    border: none;
+    border-bottom: 2px solid transparent;
+    transition: all 0.15s;
+}
+
+.tw-pt-tab:hover {
+    color: #eeddbb;
+    background: #231a12;
+}
+
+.tw-pt-tab.active {
+    color: #ffd685;
+    border-bottom: 2px solid #e09f3e;
+    background: #2b2016;
+}
+
+#tw-pt-body {
+    padding: 10px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.tw-pt-stats {
+    display: flex;
+    justify-content: space-between;
+    background: #1c150e;
+    padding: 8px 4px;
+    border-radius: 4px;
+    border: 1px solid #4a3622;
+    text-align: center;
+}
+
+.tw-pt-stat-box {
+    flex: 1;
+}
+
+.tw-pt-stat-label {
+    font-size: 10px;
+    color: #a49175;
+    text-transform: uppercase;
+}
+
+.tw-pt-stat-val {
+    font-size: 15px;
+    font-weight: bold;
+}
+
+.tw-pt-stat-val.green { color: #55d66e; }
+.tw-pt-stat-val.red { color: #ff6464; }
+.tw-pt-stat-val.gold { color: #ffd166; }
+
+.tw-pt-actions {
+    display: flex;
+    gap: 6px;
+}
+
+.tw-pt-btn {
+    flex: 1;
+    background: linear-gradient(180deg, #6b4d30 0%, #442f1c 100%);
+    border: 1px solid #a67c52;
+    color: #fff;
+    padding: 6px 8px;
+    font-size: 11px;
+    font-weight: bold;
+    border-radius: 4px;
+    cursor: pointer;
+    text-align: center;
+    transition: all 0.15s ease;
+}
+.tw-pt-btn:hover {
+    background: linear-gradient(180deg, #85603d 0%, #543b23 100%);
+}
+.tw-pt-btn:active {
+    transform: translateY(1px);
+}
+.tw-pt-btn.secondary {
+    background: #38291a;
+    border-color: #64492e;
+    color: #d1b896;
+}
+.tw-pt-btn.secondary:hover {
+    background: #4a3723;
+}
+
+#tw-pt-list-container {
+    max-height: 150px;
+    overflow-y: auto;
+    background: #19130c;
+    border: 1px solid #4a3622;
+    border-radius: 4px;
+    padding: 4px;
+}
+
+#tw-pt-list-container::-webkit-scrollbar {
+    width: 6px;
+}
+#tw-pt-list-container::-webkit-scrollbar-thumb {
+    background: #503723;
+    border-radius: 3px;
+}
+
+.tw-pt-list-item {
+    padding: 4px 6px;
+    font-size: 11px;
+    color: #e0cca7;
+    border-bottom: 1px solid #291d12;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+.tw-pt-list-item:hover {
+    background: #2b1f13;
+}
+
+.tw-pt-badge-inativo {
+    background: #5a1e1e;
+    color: #ff9999;
+    font-size: 9px;
+    padding: 1px 4px;
+    border-radius: 3px;
+    border: 1px solid #8c2a2a;
+}
+
+#tw-pt-manual-panel {
+    display: none;
+    flex-direction: column;
+    gap: 6px;
+}
+
+#tw-pt-friends-input {
+    width: 100%;
+    height: 100px;
+    background: #19130c;
+    border: 1px solid #64492e;
+    color: #eeddbb;
+    font-size: 11px;
+    padding: 6px;
+    border-radius: 4px;
+    box-sizing: border-box;
+    resize: vertical;
+    font-family: monospace;
+}
+
+#tw-pt-toast {
+    font-size: 11px;
+    color: #ffd685;
+    text-align: center;
+    min-height: 14px;
+    font-weight: bold;
+}
+
+/* Minimized Draggable Pill */
+#tw-pt-pill {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    background: linear-gradient(180deg, #442f1c 0%, #291c10 100%);
+    border: 2px solid #a67c52;
+    color: #ffd685;
+    padding: 7px 14px;
+    border-radius: 20px;
+    font-weight: bold;
+    font-size: 12px;
+    cursor: grab;
+    z-index: 999999;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.7);
+    display: none;
+    user-select: none;
+    transition: transform 0.1s, box-shadow 0.1s;
+}
+#tw-pt-pill:hover {
+    background: linear-gradient(180deg, #593e25 0%, #352415 100%);
+    box-shadow: 0 6px 18px rgba(0,0,0,0.85);
+}
+#tw-pt-pill:active {
+    cursor: grabbing;
+}

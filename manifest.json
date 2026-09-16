@@ -1,0 +1,18 @@
+{
+  "manifest_version": 3,
+  "name": "The West - Friends Tracker",
+  "version": "1.0.1",
+  "description": "Rastreie amigos inativos e monitore o envio de presentes e pretzels no The West.",
+  "permissions": ["storage"],
+  "content_scripts": [
+    {
+      "matches": ["*://*.the-west.net/game.php*"],
+      "js": ["content.js"],
+      "css": ["style.css"],
+      "run_at": "document_idle"
+    }
+  ],
+  "icons": {
+    "48": "icon.png"
+  }
+}
