@@ -1,8 +1,8 @@
 (function() {
-    // Evita injetar mais de uma vez
+    // Prevent multiple injections
     if (document.getElementById("tw-pt-container")) return;
 
-    // Persistencia Local
+    // Local Persistence
     function loadSet(key) {
         var raw = localStorage.getItem(key);
         var set = new Set();
@@ -34,7 +34,7 @@
     }
 
     function getCurrentMode() {
-        return localStorage.getItem("tw_ft_mode") || "auto"; // "auto" ou "manual"
+        return localStorage.getItem("tw_ft_mode") || "auto"; // "auto" or "manual"
     }
 
     function setCurrentMode(m) {
@@ -49,76 +49,76 @@
         localStorage.setItem("tw_ft_closed", closed ? "true" : "false");
     }
 
-    // Cria a interface HTML
+    // Create HTML interface
     var container = document.createElement("div");
     container.id = "tw-pt-container";
     container.innerHTML = 
         '<div id="tw-pt-header">' +
             '<div class="tw-pt-title">🤠 Friends Tracker</div>' +
             '<div id="tw-pt-header-buttons">' +
-                '<button class="tw-pt-icon-btn" id="tw-pt-btn-minimize" title="Minimizar">_</button>' +
-                '<button class="tw-pt-icon-btn close" id="tw-pt-btn-close" title="Fechar de verdade (Reabra pelo ícone da extensão)">✕</button>' +
+                '<button class="tw-pt-icon-btn" id="tw-pt-btn-minimize" title="Minimize">_</button>' +
+                '<button class="tw-pt-icon-btn close" id="tw-pt-btn-close" title="Close (Reopen anytime via extension icon)">✕</button>' +
             '</div>' +
         '</div>' +
 
         '<div class="tw-pt-tabs">' +
-            '<button class="tw-pt-tab active" id="tw-pt-tab-auto">⚡ Auto (Pelos Logs)</button>' +
-            '<button class="tw-pt-tab" id="tw-pt-tab-manual">📝 Lista Manual</button>' +
+            '<button class="tw-pt-tab active" id="tw-pt-tab-auto">⚡ Auto (From Logs)</button>' +
+            '<button class="tw-pt-tab" id="tw-pt-tab-manual">📝 Manual List</button>' +
         '</div>' +
 
         '<div id="tw-pt-body">' +
             '<div class="tw-pt-stats">' +
                 '<div class="tw-pt-stat-box">' +
-                    '<div class="tw-pt-stat-label" id="tw-pt-label-total">Amigos</div>' +
+                    '<div class="tw-pt-stat-label" id="tw-pt-label-total">Friends</div>' +
                     '<div class="tw-pt-stat-val gold" id="tw-pt-stat-total">0</div>' +
                 '</div>' +
                 '<div class="tw-pt-stat-box">' +
-                    '<div class="tw-pt-stat-label">Ativos</div>' +
+                    '<div class="tw-pt-stat-label">Active</div>' +
                     '<div class="tw-pt-stat-val green" id="tw-pt-stat-active">0</div>' +
                 '</div>' +
                 '<div class="tw-pt-stat-box">' +
-                    '<div class="tw-pt-stat-label">Inativos</div>' +
+                    '<div class="tw-pt-stat-label">Inactive</div>' +
                     '<div class="tw-pt-stat-val red" id="tw-pt-stat-inactive">0</div>' +
                 '</div>' +
             '</div>' +
 
             '<div class="tw-pt-actions">' +
-                '<button class="tw-pt-btn" id="tw-pt-btn-scan">🔍 Escanear Logs</button>' +
-                '<button class="tw-pt-btn secondary" id="tw-pt-btn-copy">📋 Copiar Inativos</button>' +
+                '<button class="tw-pt-btn" id="tw-pt-btn-scan">🔍 Scan Logs</button>' +
+                '<button class="tw-pt-btn secondary" id="tw-pt-btn-copy">📋 Copy Inactive</button>' +
             '</div>' +
 
             '<div id="tw-pt-toast"></div>' +
 
-            // Painel Modo Auto
+            // Auto Mode Panel
             '<div id="tw-pt-auto-panel">' +
                 '<div style="font-size:11px; color:#a49175; margin-bottom:4px; font-weight:bold;" id="tw-pt-list-title">' +
-                    'Você enviou, mas não retribuíram:' +
+                    'You sent, but they didn\'t return:' +
                 '</div>' +
                 '<div id="tw-pt-list-container"></div>' +
                 '<div style="margin-top:6px; display:flex; justify-content:space-between; align-items:center;">' +
-                    '<button class="tw-pt-btn secondary" style="flex:none; font-size:10px; padding:3px 6px;" id="tw-pt-btn-export-manual" title="Copia os amigos detectados para a lista manual">Salvar como Lista Manual</button>' +
-                    '<button class="tw-pt-btn secondary" style="flex:none; font-size:10px; padding:3px 6px;" id="tw-pt-btn-reset">Zerar Ciclo</button>' +
+                    '<button class="tw-pt-btn secondary" style="flex:none; font-size:10px; padding:3px 6px;" id="tw-pt-btn-export-manual" title="Copy detected friends to manual list">Save as Manual List</button>' +
+                    '<button class="tw-pt-btn secondary" style="flex:none; font-size:10px; padding:3px 6px;" id="tw-pt-btn-reset">Reset Cycle</button>' +
                 '</div>' +
             '</div>' +
 
-            // Painel Modo Manual
+            // Manual Mode Panel
             '<div id="tw-pt-manual-panel">' +
-                '<div style="font-size:11px; color:#a49175; font-weight:bold;">Cole ou edite sua lista de amigos:</div>' +
-                '<textarea id="tw-pt-friends-input" placeholder="amigo1;amigo2;amigo3..."></textarea>' +
-                '<div style="font-size:10px; color:#888;">Separe os nomes por ponto e vírgula (;), vírgula ou linha.</div>' +
+                '<div style="font-size:11px; color:#a49175; font-weight:bold;">Paste or edit your friends list:</div>' +
+                '<textarea id="tw-pt-friends-input" placeholder="friend1;friend2;friend3..."></textarea>' +
+                '<div style="font-size:10px; color:#888;">Separate names by semicolon (;), comma, or line.</div>' +
                 '<div class="tw-pt-actions">' +
-                    '<button class="tw-pt-btn" id="tw-pt-btn-save-manual">Salvar Lista</button>' +
-                    '<button class="tw-pt-btn secondary" id="tw-pt-btn-import-auto">Importar dos Logs</button>' +
+                    '<button class="tw-pt-btn" id="tw-pt-btn-save-manual">Save List</button>' +
+                    '<button class="tw-pt-btn secondary" id="tw-pt-btn-import-auto">Import from Logs</button>' +
                 '</div>' +
             '</div>' +
         '</div>';
 
-    // Pílula minimizada
+    // Minimized Pill
     var pill = document.createElement("div");
     pill.id = "tw-pt-pill";
-    pill.innerHTML = '<span id="tw-pt-pill-text">🤠 Friends Tracker</span><span id="tw-pt-pill-close" class="tw-pt-pill-close" title="Fechar">✕</span>';
+    pill.innerHTML = '<span id="tw-pt-pill-text">🤠 Friends Tracker</span><span id="tw-pt-pill-close" class="tw-pt-pill-close" title="Close">✕</span>';
 
-    // Se estiver no estado fechado, inicia oculto
+    // If in closed state, start hidden
     if (isClosedState()) {
         container.style.display = "none";
         pill.style.display = "none";
@@ -136,14 +136,14 @@
         }, 3500);
     }
 
-    // Fecha a janela de verdade (sumindo tudo e lembrando a escolha)
+    // Completely close window (hide everything and remember choice)
     function closeTracker() {
         setClosedState(true);
         container.style.display = "none";
         pill.style.display = "none";
     }
 
-    // Abre a janela
+    // Open window
     function openTracker() {
         setClosedState(false);
         pill.style.display = "none";
@@ -151,7 +151,7 @@
         render();
     }
 
-    // Alterna abrir/fechar (acionado ao clicar no ícone da extensão no Chrome)
+    // Toggle open/close (triggered by clicking extension icon in Chrome)
     function toggleTracker() {
         var isHidden = container.style.display === "none" && pill.style.display === "none";
         if (isHidden) {
@@ -161,7 +161,7 @@
         }
     }
 
-    // Ouve mensagens da extensão (clique no ícone da barra de ferramentas do Chrome)
+    // Listen for extension messages (Chrome toolbar icon click)
     if (typeof chrome !== "undefined" && chrome.runtime && chrome.runtime.onMessage) {
         chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
             if (request && request.action === "toggle_tracker") {
@@ -171,7 +171,7 @@
         });
     }
 
-    // Renderiza a interface baseado no modo atual
+    // Render interface based on current mode
     function render() {
         var mode = getCurrentMode();
         var autoSent = loadSet("tw_ft_auto_sent");
@@ -188,16 +188,16 @@
             tabManual.className = "tw-pt-tab";
             autoPanel.style.display = "block";
             manualPanel.style.display = "none";
-            document.getElementById("tw-pt-label-total").innerText = "Enviados";
+            document.getElementById("tw-pt-label-total").innerText = "Sent";
         } else {
             tabAuto.className = "tw-pt-tab";
             tabManual.className = "tw-pt-tab active";
             autoPanel.style.display = "none";
             manualPanel.style.display = "flex";
-            document.getElementById("tw-pt-label-total").innerText = "Na Lista";
+            document.getElementById("tw-pt-label-total").innerText = "On List";
         }
 
-        // Calcula amigos, ativos e inativos
+        // Calculate friends, active, and inactive
         var totalCount = 0;
         var activeCount = 0;
         var inactives = [];
@@ -224,18 +224,18 @@
 
         inactives.sort();
 
-        // Atualiza stats
+        // Update stats
         document.getElementById("tw-pt-stat-total").innerText = totalCount;
         document.getElementById("tw-pt-stat-active").innerText = activeCount;
         document.getElementById("tw-pt-stat-inactive").innerText = inactives.length;
 
-        // Atualiza pílula minimizada
+        // Update minimized pill
         var pillText = document.getElementById("tw-pt-pill-text");
         if (pillText) {
-            pillText.innerText = "🤠 Inativos: " + inactives.length + " | Ativos: " + activeCount;
+            pillText.innerText = "🤠 Inactive: " + inactives.length + " | Active: " + activeCount;
         }
 
-        // Atualiza lista
+        // Update list
         var listContainer = document.getElementById("tw-pt-list-container");
         listContainer.innerHTML = "";
 
@@ -243,18 +243,18 @@
             if (mode === "auto") {
                 listContainer.innerHTML = 
                     '<div style="padding:15px 10px; text-align:center; color:#a49175; font-size:11px;">' +
-                        'Abra a janela de logs no jogo e clique em <b>Escanear Logs</b> para capturar quem você enviou e quem te enviou!' +
+                        'Open the in-game log window and click <b>Scan Logs</b> to capture who you sent gifts to and who sent to you!' +
                     '</div>';
             } else {
                 listContainer.innerHTML = 
                     '<div style="padding:15px 10px; text-align:center; color:#a49175; font-size:11px;">' +
-                        'Sua lista manual está vazia.<br>Cole seus amigos na aba <b>Lista Manual</b> ou use a aba <b>Auto (Pelos Logs)</b>!' +
+                        'Your manual list is empty.<br>Paste your friends in the <b>Manual List</b> tab or switch to <b>Auto (From Logs)</b>!' +
                     '</div>';
             }
         } else if (inactives.length === 0) {
             listContainer.innerHTML = 
                 '<div style="padding:15px; text-align:center; color:#55d66e; font-weight:bold;">' +
-                    'Nenhum amigo inativo! Todos retribuíram os presentes! 🎉' +
+                    'No inactive friends! Everyone returned gifts! 🎉' +
                 '</div>';
         } else {
             inactives.forEach(function(name, idx) {
@@ -262,22 +262,22 @@
                 row.className = "tw-pt-list-item";
                 row.innerHTML = 
                     '<span><b>' + (idx + 1) + '.</b> ' + name + '</span>' +
-                    '<span class="tw-pt-badge-inativo">Sem retorno</span>';
+                    '<span class="tw-pt-badge-inativo">No return</span>';
                 listContainer.appendChild(row);
             });
         }
     }
 
-    // Escaneia a pagina atual do jogo
+    // Scan current game page
     function scanPage() {
         var autoSent = loadSet("tw_ft_auto_sent");
         var autoReceived = loadSet("tw_ft_auto_received");
         var bodyText = document.body ? document.body.innerText : "";
 
-        // Regex que captura automaticamente:
-        // Gift to a friend: [Nome] (enviados)
-        // Gift from a friend: [Nome] (recebidos)
-        // Tambem aceita em portugues: Presente para / Presente de
+        // Regex that matches:
+        // Gift to a friend: [Name] (sent)
+        // Gift from a friend: [Name] (received)
+        // Also supports Portuguese: Presente para / Presente de
         var pattern = new RegExp("(?:Gift|Presente)\\s+(to|from|para|de)\\s+(?:a\\s+friend|um\\s+amigo):\\s*([^\\r\\n\\t(+]+)", "gi");
 
         var newSent = 0;
@@ -308,13 +308,13 @@
         render();
 
         if (newSent > 0 || newReceived > 0) {
-            showToast("+" + newSent + " enviados, +" + newReceived + " recebidos nesta página!");
+            showToast("+" + newSent + " sent, +" + newReceived + " received on this page!");
         } else {
-            showToast("Nenhum registro novo nesta página.");
+            showToast("No new records on this page.");
         }
     }
 
-    // Retorna a lista de inativos do modo ativo
+    // Get inactive list for current mode
     function getInactivesList() {
         var mode = getCurrentMode();
         var autoSent = loadSet("tw_ft_auto_sent");
@@ -335,32 +335,32 @@
         return list;
     }
 
-    // Copiar inativos
+    // Copy inactive friends
     document.getElementById("tw-pt-btn-copy").addEventListener("click", function() {
         var inactives = getInactivesList();
         if (inactives.length === 0) {
-            showToast("Nenhum amigo inativo para copiar!");
+            showToast("No inactive friends to copy!");
             return;
         }
         navigator.clipboard.writeText(inactives.join(";")).then(function() {
-            showToast("Lista copiada! (" + inactives.length + " amigos inativos)");
+            showToast("List copied! (" + inactives.length + " inactive friends)");
         });
     });
 
-    // Escanear
+    // Scan
     document.getElementById("tw-pt-btn-scan").addEventListener("click", scanPage);
 
-    // Zerar ciclo
+    // Reset cycle
     document.getElementById("tw-pt-btn-reset").addEventListener("click", function() {
-        if (confirm("Deseja zerar os registros de enviados e recebidos para iniciar um novo ciclo?")) {
+        if (confirm("Reset sent and received records to start a new cycle?")) {
             saveSet("tw_ft_auto_sent", new Set());
             saveSet("tw_ft_auto_received", new Set());
             render();
-            showToast("Ciclo zerado!");
+            showToast("Cycle reset!");
         }
     });
 
-    // Abas
+    // Tabs
     document.getElementById("tw-pt-tab-auto").addEventListener("click", function() {
         setCurrentMode("auto");
         render();
@@ -373,7 +373,7 @@
         render();
     });
 
-    // Salvar lista manual
+    // Save manual list
     document.getElementById("tw-pt-btn-save-manual").addEventListener("click", function() {
         var input = document.getElementById("tw-pt-friends-input").value;
         var rawItems = input.split(/[\n,;]+/);
@@ -386,21 +386,21 @@
         });
         saveManualFriends(clean);
         render();
-        showToast("Salvo! " + clean.length + " amigos na lista manual.");
+        showToast("Saved! " + clean.length + " friends in manual list.");
     });
 
-    // Importar amigos detectados dos logs para o campo manual
+    // Import detected friends from logs to manual input
     function importAutoToManual() {
         var autoSent = loadSet("tw_ft_auto_sent");
         if (autoSent.size === 0) {
-            showToast("Nenhum amigo detectado nos logs ainda!");
+            showToast("No friends detected in logs yet!");
             return;
         }
         var arr = Array.from(autoSent).sort();
         saveManualFriends(arr);
         document.getElementById("tw-pt-friends-input").value = arr.join("; ");
         render();
-        showToast("Importados " + arr.length + " amigos detectados nos logs!");
+        showToast("Imported " + arr.length + " friends detected in logs!");
     }
 
     document.getElementById("tw-pt-btn-import-auto").addEventListener("click", importAutoToManual);
@@ -410,20 +410,20 @@
         render();
     });
 
-    // Minimizar painel
+    // Minimize panel
     document.getElementById("tw-pt-btn-minimize").addEventListener("click", function() {
         container.style.display = "none";
         pill.style.display = "flex";
     });
 
-    // Fechar painel de verdade (some tudo e lembra a escolha)
+    // Close panel completely (hides everything and remembers choice)
     document.getElementById("tw-pt-btn-close").addEventListener("click", closeTracker);
     document.getElementById("tw-pt-pill-close").addEventListener("click", function(e) {
         e.stopPropagation();
         closeTracker();
     });
 
-    // Variáveis de arraste para Pílula e Janela
+    // Dragging variables for Pill and Window
     var isPillDragging = false;
     var pillStartX = 0, pillStartY = 0;
     var pillOffsetX = 0, pillOffsetY = 0;
@@ -432,7 +432,7 @@
     var isMainDragging = false;
     var mainOffsetX = 0, mainOffsetY = 0;
 
-    // Arrastar Pílula Minimizada
+    // Drag Minimized Pill
     pill.addEventListener("mousedown", function(e) {
         if (e.target.id === "tw-pt-pill-close") return;
         isPillDragging = true;
@@ -445,7 +445,7 @@
         e.preventDefault();
     });
 
-    // Arrastar Janela Principal
+    // Drag Main Window
     var header = document.getElementById("tw-pt-header");
     header.addEventListener("mousedown", function(e) {
         if (e.target.tagName === "BUTTON") return;
@@ -456,7 +456,7 @@
     });
 
     window.addEventListener("mousemove", function(e) {
-        // Arrastando a pílula
+        // Dragging pill
         if (isPillDragging) {
             var dx = Math.abs(e.clientX - pillStartX);
             var dy = Math.abs(e.clientY - pillStartY);
@@ -469,7 +469,7 @@
             }
         }
 
-        // Arrastando o container principal
+        // Dragging main container
         if (isMainDragging) {
             container.style.right = "auto";
             container.style.bottom = "auto";
@@ -481,7 +481,7 @@
     window.addEventListener("mouseup", function() {
         if (isPillDragging) {
             isPillDragging = false;
-            // Se apenas clicou na pílula sem arrastar, restaura a janela principal
+            // If clicked without dragging, restore main window
             if (!pillMoved) {
                 pill.style.display = "none";
                 container.style.display = "block";
@@ -492,7 +492,7 @@
         }
     });
 
-    // Auto-scan ao clicar em paginacao do The-West
+    // Auto-scan when clicking pagination in The-West
     document.addEventListener("click", function(e) {
         var target = e.target;
         if (target && (target.classList.contains("page_nav") || 
